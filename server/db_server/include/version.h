@@ -6,6 +6,6 @@
 #define VERSION_PATCH 1
 #define GIT_BRANCH "master"
 #define GIT_HASH "642c5ef"
-#define BUILD_TIME "20210526134650"
+#define BUILD_TIME "20210526131503"
 
 #endif // VERSION_H_INCLUDED
