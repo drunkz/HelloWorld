@@ -5,6 +5,7 @@
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
+#include <boost/log/sinks/async_frontend.hpp>
 #include <boost/log/sinks/sync_frontend.hpp>
 #include <boost/log/sinks/text_ostream_backend.hpp>
 #include <boost/log/sources/logger.hpp>
@@ -36,7 +37,6 @@ namespace attrs   = boost::log::attributes;
 #define LOG_ERROR HW_LOG(error)
 #define LOG_FATAL HW_LOG(fatal)
 
-BOOST_LOG_ATTRIBUTE_KEYWORD(timestamp, "TimeStamp", boost::posix_time::ptime)
 namespace Server {
 class server_base {
   public:
@@ -44,13 +44,14 @@ class server_base {
     virtual ~server_base();
 
   private:
-    lua_State *L;
-    // src::logger lg;
-    logging::sources::severity_logger<logging::trivial::severity_level> lg;
-    bool                                                                init_config();
-    bool                                                                init_log();
-    bool                                                                init_lua();
-    bool                                                                init_socket();
+    lua_State *                                            L;
+    src::severity_logger<logging::trivial::severity_level> lg;
+    void                                                   coloring_formatter(logging::record_view const &rec, logging::formatting_ostream &strm);
+    bool                                                   init();
+    bool                                                   init_config();
+    void                                                   init_log();
+    bool                                                   init_lua();
+    bool                                                   init_network();
 };
 } // namespace Server
 
