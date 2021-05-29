@@ -1,6 +1,7 @@
 #ifndef SERVER_BASE_H_INCLUDED
 #define SERVER_BASE_H_INCLUDED
 
+#include <boost/core/null_deleter.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
@@ -23,17 +24,19 @@
 namespace logging = boost::log;
 namespace sinks   = boost::log::sinks;
 namespace src     = boost::log::sources;
-// namespace expr = boost::log::expressions;
-// namespace attrs = boost::log::attributes;
+namespace expr    = boost::log::expressions;
+namespace attrs   = boost::log::attributes;
 // namespace keywords = boost::log::keywords;
 
-#define HW_TRACE BOOST_LOG_SEV(lg, logging::trivial::trace)
-#define HW_DEBUG BOOST_LOG_SEV(lg, logging::trivial::debug)
-#define HW_INFO BOOST_LOG_SEV(lg, logging::trivial::info)
-#define HW_WARN BOOST_LOG_SEV(lg, logging::trivial::warning)
-#define HW_ERROR BOOST_LOG_SEV(lg, logging::trivial::error)
-#define HW_FATAL BOOST_LOG_SEV(lg, logging::trivial::fatal)
+#define HW_LOG(severity) BOOST_LOG_SEV(lg, boost::log::trivial::severity) << "[" << __FILE__ << ":" << __LINE__ << "]"
+#define LOG_TRACE HW_LOG(trace)
+#define LOG_DEBUG HW_LOG(debug)
+#define LOG_INFO HW_LOG(info)
+#define LOG_WARN HW_LOG(warning)
+#define LOG_ERROR HW_LOG(error)
+#define LOG_FATAL HW_LOG(fatal)
 
+BOOST_LOG_ATTRIBUTE_KEYWORD(timestamp, "TimeStamp", boost::posix_time::ptime)
 namespace Server {
 class server_base {
   public:
@@ -42,11 +45,12 @@ class server_base {
 
   private:
     lua_State *L;
-    // logging::sources::severity_logger<logging::trivial::severity_level> lg;
-    bool init_config();
-    bool init_log();
-    bool init_lua();
-    bool init_socket();
+    // src::logger lg;
+    logging::sources::severity_logger<logging::trivial::severity_level> lg;
+    bool                                                                init_config();
+    bool                                                                init_log();
+    bool                                                                init_lua();
+    bool                                                                init_socket();
 };
 } // namespace Server
 
