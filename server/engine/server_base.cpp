@@ -1,12 +1,20 @@
 #include "server_base.h"
+#include "config.hpp"
+#include <boost/stacktrace.hpp>
 
 namespace Server {
 
 server_base::server_base() {
     init_log();
-    for (size_t i = 0; i < 500; i++) {
-        LOG_DEBUG << "aaaa" << i;
-    }
+    // LOG_TRACE << "aaa";
+    // LOG_INFO << "aaa";
+    // LOG_DEBUG << "aaaa";
+    // LOG_WARN << "ccc";
+    // LOG_ERROR << "bbb";
+    // LOG_FATAL << "ccc";
+    std::cout << boost::stacktrace::stacktrace();
+    config cfg;
+    cfg.load("aabb.cc");
     L = luaL_newstate();
     if (L == nullptr) {
     } else {
@@ -15,49 +23,61 @@ server_base::server_base() {
     }
 }
 
-void coloring_formatter(logging::record_view const &rec, logging::formatting_ostream &strm) {
+void my_formatter(logging::record_view const &rec, logging::formatting_ostream &strm) {
     auto severity = rec[logging::trivial::severity];
+    // #ifdef __linux__
     if (severity) {
-        // Set the color
         switch (severity.get()) {
-            case 0:
+            case boost::log::trivial::trace:
+                strm << "\033[36m";
+                break;
+            case boost::log::trivial::debug:
+                strm << "\033[34m";
+                break;
+            case boost::log::trivial::info:
                 strm << "\033[32m";
                 break;
-            case 1:
+            case boost::log::trivial::warning:
                 strm << "\033[33m";
                 break;
-            case 2:
-            case 3:
+            case boost::log::trivial::error:
+            case boost::log::trivial::fatal:
                 strm << "\033[31m";
                 break;
             default:
                 break;
         }
     }
-    strm << rec[logging::expressions::smessage];
+    // #endif
+    strm << rec[expr::smessage];
     if (severity) {
         strm << "\033[0m";
     }
 }
 
 void server_base::init_log() {
-    typedef sinks::asynchronous_sink<sinks::text_ostream_backend> text_ostream_sink;
-    boost::shared_ptr<text_ostream_sink>                          ostream_sink = boost::make_shared<text_ostream_sink>();
+    // boost::log::core::get()->set_exception_handler(boost::log::make_exception_suppressor());
+    typedef sinks::asynchronous_sink<sinks::text_ostream_backend> t_text_ostream;
+    boost::shared_ptr<t_text_ostream>                             ostream_sink = boost::make_shared<t_text_ostream>();
     ostream_sink->locked_backend()->add_stream(boost::shared_ptr<std::ostream>(&std::clog, boost::null_deleter()));
     // ostream_sink->set_formatter(expr::stream << expr::format_date_time<boost::posix_time::ptime>("TimeStamp", "%Y-%m-%d %H:%M:%S")
     //                                          << expr::format_named_scope("Scope", logging::keywords::format = "[%f:%l]") <<
     //                                          logging::trivial::severity
     //                                          << expr::smessage);
-    // ostream_sink->set_formatter();
+    ostream_sink->set_formatter(&my_formatter);
     logging::core::get()->add_sink(ostream_sink);
 
-    typedef sinks::asynchronous_sink<sinks::text_file_backend> text_file_sink;
-    boost::shared_ptr<text_file_sink>                          file_sink = boost::make_shared<text_file_sink>();
+    typedef sinks::asynchronous_sink<sinks::text_file_backend> t_text_file;
+    boost::shared_ptr<t_text_file>                             file_sink = boost::make_shared<t_text_file>();
     file_sink->locked_backend()->set_file_name_pattern("/home/dkz/ttt/aaa/sample_%Y-%m-%d_%H-%M-%S.txt");
     file_sink->locked_backend()->set_rotation_size(10 << 20);
     file_sink->set_formatter(expr::stream << expr::format_date_time<boost::posix_time::ptime>("TimeStamp", "%Y-%m-%d %H:%M:%S")
                                           << expr::format_named_scope("Scope", logging::keywords::format = "[%f:%l]") << logging::trivial::severity
                                           << expr::smessage);
+    file_sink->locked_backend()->set_file_collector(
+        boost::log::sinks::file::make_collector(keywords::target = "aaa", keywords::max_size = 3 * 1024, keywords::max_files = 10));
+    file_sink->locked_backend()->scan_for_files(boost::log::sinks::file::scan_method::scan_matching, true);
+    file_sink->locked_backend()->auto_flush(true);
     logging::core::get()->add_sink(file_sink);
     logging::add_common_attributes();
     // logging::core::get()->set_filter(logging::trivial::severity >= logging::trivial::info);

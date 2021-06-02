@@ -13,21 +13,23 @@
 #include <boost/log/sources/severity_logger.hpp>
 #include <boost/log/support/date_time.hpp>
 #include <boost/log/trivial.hpp>
+#include <boost/log/utility/exception_handler.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/console.hpp>
 #include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/from_settings.hpp>
 #include <boost/smart_ptr/make_shared_object.hpp>
 #include <boost/smart_ptr/shared_ptr.hpp>
 #include <fstream>
 #include <iostream>
 #include <lua.hpp>
 
-namespace logging = boost::log;
-namespace sinks   = boost::log::sinks;
-namespace src     = boost::log::sources;
-namespace expr    = boost::log::expressions;
-namespace attrs   = boost::log::attributes;
-// namespace keywords = boost::log::keywords;
+namespace logging  = boost::log;
+namespace sinks    = boost::log::sinks;
+namespace src      = boost::log::sources;
+namespace expr     = boost::log::expressions;
+namespace attrs    = boost::log::attributes;
+namespace keywords = boost::log::keywords;
 
 #define HW_LOG(severity) BOOST_LOG_SEV(lg, boost::log::trivial::severity) << "[" << __FILE__ << ":" << __LINE__ << "]"
 #define LOG_TRACE HW_LOG(trace)
@@ -46,7 +48,6 @@ class server_base {
   private:
     lua_State *                                            L;
     src::severity_logger<logging::trivial::severity_level> lg;
-    void                                                   coloring_formatter(logging::record_view const &rec, logging::formatting_ostream &strm);
     bool                                                   init();
     bool                                                   init_config();
     void                                                   init_log();

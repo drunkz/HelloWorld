@@ -15,7 +15,7 @@ set(source_files
 ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
 
 add_executable(db_server ${source_files})
-target_link_libraries(db_server lua boost_log boost_log_setup pthread boost_thread)
+target_link_libraries(db_server lua boost_log boost_log_setup pthread boost_thread dl)
 
 add_custom_command(
     TARGET db_server POST_BUILD
