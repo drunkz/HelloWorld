@@ -12,6 +12,14 @@ set(source_files
     ../engine/server_base.cpp
     )
 
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+	message("current platform: Linux")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    message("current platform: Windows")
+else()
+    message("other platform: ${CMAKE_SYSTEM_NAME}")
+endif()
+
 include_directories("/home/dkz/src/breakpad/src")
 link_directories("/home/dkz/src/breakpad/src/client/linux")
 add_compile_definitions(BOOST_LOG_DYN_LINK BOOST_STACKTRACE_USE_BACKTRACE)
