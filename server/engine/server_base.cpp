@@ -1,4 +1,5 @@
 #include "server_base.h"
+#include "client/linux/handler/exception_handler.h"
 #include "config.hpp"
 #include <boost/stacktrace.hpp>
 
@@ -21,7 +22,9 @@ server_base::server_base() {
     // LOG_ERROR << "bbb";
     // LOG_FATAL << "ccc";
     // std::cout << boost::stacktrace::stacktrace();
-    std::set_terminate(&my_terminate_handler);
+    google_breakpad::MinidumpDescriptor descriptor("/home/dkz/Videos");
+    google_breakpad::ExceptionHandler   eh(descriptor, NULL, NULL, NULL, true, -1);
+    // std::set_terminate(&my_terminate_handler);
     config cfg;
     // cfg.load("aabb.cc");
     int b = 3 / 0;
