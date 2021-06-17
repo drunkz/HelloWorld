@@ -1,5 +1,0 @@
-/server/build
-/.kdev4
-server.kdev4
-.vscode
-/server/db_server/include/version.h

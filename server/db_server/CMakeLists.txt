@@ -12,10 +12,11 @@ set(source_files
     ../engine/server_base.cpp
     )
 
-ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
+# ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK -DBOOST_STACKTRACE_USE_BACKTRACE)
+add_compile_definitions(BOOST_LOG_DYN_LINK BOOST_STACKTRACE_USE_BACKTRACE)
 
 add_executable(db_server ${source_files})
-target_link_libraries(db_server lua boost_log boost_log_setup pthread boost_thread dl)
+target_link_libraries(db_server lua boost_log boost_log_setup pthread boost_thread dl backtrace)
 
 add_custom_command(
     TARGET db_server POST_BUILD

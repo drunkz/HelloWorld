@@ -4,6 +4,14 @@
 
 namespace Server {
 
+void my_terminate_handler() {
+    try {
+        std::cerr << boost::stacktrace::stacktrace();
+    } catch (...) {
+    }
+    std::abort();
+}
+
 server_base::server_base() {
     init_log();
     // LOG_TRACE << "aaa";
@@ -12,10 +20,12 @@ server_base::server_base() {
     // LOG_WARN << "ccc";
     // LOG_ERROR << "bbb";
     // LOG_FATAL << "ccc";
-    std::cout << boost::stacktrace::stacktrace();
+    // std::cout << boost::stacktrace::stacktrace();
+    std::set_terminate(&my_terminate_handler);
     config cfg;
-    cfg.load("aabb.cc");
-    L = luaL_newstate();
+    // cfg.load("aabb.cc");
+    int b = 3 / 0;
+    L     = luaL_newstate();
     if (L == nullptr) {
     } else {
         luaL_openlibs(L);

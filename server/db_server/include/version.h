@@ -5,7 +5,7 @@
 #define VERSION_MINOR 0
 #define VERSION_PATCH 1
 #define GIT_BRANCH "master"
-#define GIT_HASH "7488f8b"
-#define BUILD_TIME "20210602174010"
+#define GIT_HASH "5a7ad6a"
+#define BUILD_TIME "20210603133905"
 
 #endif // VERSION_H_INCLUDED
