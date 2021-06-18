@@ -4,7 +4,7 @@ IndentCaseLabels: true
 PointerAlignment: Right
 AlignOperands: true
 AlignConsecutiveAssignments: true
-AlignConsecutiveDeclarations: true
+AlignConsecutiveDeclarations: false
 AlignTrailingComments: true
 AccessModifierOffset: -2
 MaxEmptyLinesToKeep: 1

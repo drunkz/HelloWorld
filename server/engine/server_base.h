@@ -46,13 +46,13 @@ class server_base {
     virtual ~server_base();
 
   private:
-    lua_State *                                            L;
+    lua_State *L;
     src::severity_logger<logging::trivial::severity_level> lg;
-    bool                                                   init();
-    bool                                                   init_config();
-    void                                                   init_log();
-    bool                                                   init_lua();
-    bool                                                   init_network();
+    bool init();
+    bool init_config();
+    void init_log();
+    bool init_lua();
+    bool init_network();
 };
 } // namespace Server
 

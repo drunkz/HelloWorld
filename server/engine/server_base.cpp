@@ -23,7 +23,7 @@ server_base::server_base() {
     // LOG_FATAL << "ccc";
     // std::cout << boost::stacktrace::stacktrace();
     google_breakpad::MinidumpDescriptor descriptor("/home/dkz/Videos");
-    google_breakpad::ExceptionHandler   eh(descriptor, NULL, NULL, NULL, true, -1);
+    google_breakpad::ExceptionHandler eh(descriptor, NULL, NULL, NULL, true, -1);
     // std::set_terminate(&my_terminate_handler);
     config cfg;
     // cfg.load("aabb.cc");
@@ -71,7 +71,7 @@ void my_formatter(logging::record_view const &rec, logging::formatting_ostream &
 void server_base::init_log() {
     // boost::log::core::get()->set_exception_handler(boost::log::make_exception_suppressor());
     typedef sinks::asynchronous_sink<sinks::text_ostream_backend> t_text_ostream;
-    boost::shared_ptr<t_text_ostream>                             ostream_sink = boost::make_shared<t_text_ostream>();
+    boost::shared_ptr<t_text_ostream> ostream_sink = boost::make_shared<t_text_ostream>();
     ostream_sink->locked_backend()->add_stream(boost::shared_ptr<std::ostream>(&std::clog, boost::null_deleter()));
     // ostream_sink->set_formatter(expr::stream << expr::format_date_time<boost::posix_time::ptime>("TimeStamp", "%Y-%m-%d %H:%M:%S")
     //                                          << expr::format_named_scope("Scope", logging::keywords::format = "[%f:%l]") <<
@@ -81,7 +81,7 @@ void server_base::init_log() {
     logging::core::get()->add_sink(ostream_sink);
 
     typedef sinks::asynchronous_sink<sinks::text_file_backend> t_text_file;
-    boost::shared_ptr<t_text_file>                             file_sink = boost::make_shared<t_text_file>();
+    boost::shared_ptr<t_text_file> file_sink = boost::make_shared<t_text_file>();
     file_sink->locked_backend()->set_file_name_pattern("/home/dkz/ttt/aaa/sample_%Y-%m-%d_%H-%M-%S.txt");
     file_sink->locked_backend()->set_rotation_size(10 << 20);
     file_sink->set_formatter(expr::stream << expr::format_date_time<boost::posix_time::ptime>("TimeStamp", "%Y-%m-%d %H:%M:%S")
