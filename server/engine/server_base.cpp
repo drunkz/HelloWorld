@@ -1,39 +1,30 @@
 #include "server_base.h"
 #include "client/linux/handler/exception_handler.h"
 #include "config.hpp"
-#include <boost/stacktrace.hpp>
+#include "logger.hpp"
 
-namespace Server {
-
-void my_terminate_handler() {
-    try {
-        std::cerr << boost::stacktrace::stacktrace();
-    } catch (...) {
-    }
-    std::abort();
-}
+namespace server {
 
 server_base::server_base() {
-    init_log();
+    // init_log();
     // LOG_TRACE << "aaa";
     // LOG_INFO << "aaa";
     // LOG_DEBUG << "aaaa";
     // LOG_WARN << "ccc";
     // LOG_ERROR << "bbb";
     // LOG_FATAL << "ccc";
-    // std::cout << boost::stacktrace::stacktrace();
-    google_breakpad::MinidumpDescriptor descriptor("/home/dkz/Videos");
-    google_breakpad::ExceptionHandler eh(descriptor, NULL, NULL, NULL, true, -1);
-    // std::set_terminate(&my_terminate_handler);
-    config cfg;
-    // cfg.load("aabb.cc");
-    int b = 3 / 0;
-    L     = luaL_newstate();
-    if (L == nullptr) {
-    } else {
-        luaL_openlibs(L);
-        luaL_dostring(L, "print('hello,world')");
-    }
+    // google_breakpad::MinidumpDescriptor descriptor("/home/dkz/Videos");
+    // google_breakpad::ExceptionHandler eh(descriptor, NULL, NULL, NULL, true, -1);
+    // config cfg;
+    // // cfg.load("aabb.cc");
+    // int b = 3 / 0;
+    // L     = luaL_newstate();
+    // if (L == nullptr) {
+    // } else {
+    //     luaL_openlibs(L);
+    //     luaL_dostring(L, "print('hello,world')");
+    // }
+    logger::Get();
 }
 
 void my_formatter(logging::record_view const &rec, logging::formatting_ostream &strm) {
@@ -102,4 +93,4 @@ server_base::~server_base() {
     logging::core::get()->flush();
 }
 
-} // namespace Server
+} // namespace server

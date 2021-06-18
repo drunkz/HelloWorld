@@ -26,7 +26,7 @@ namespace keywords = boost::log::keywords;
 #define LOG_ERROR HW_LOG(error)
 #define LOG_FATAL HW_LOG(fatal)
 
-namespace Server {
+namespace server {
 class server_base {
   public:
     server_base();
@@ -41,6 +41,7 @@ class server_base {
     bool init_lua();
     bool init_network();
 };
-} // namespace Server
+
+} // namespace server
 
 #endif // SERVER_BASE_H_INCLUDED

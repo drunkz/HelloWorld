@@ -10,7 +10,7 @@
 #include <string>
 namespace pt = boost::property_tree;
 
-namespace Server {
+namespace server {
 
 class config {
   public:
@@ -26,6 +26,6 @@ class config {
     pt::ptree tree;
 };
 
-} // namespace Server
+} // namespace server
 
 #endif // CONFIG_HPP_INCLUDED
