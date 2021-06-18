@@ -74,7 +74,7 @@ void server_base::init_log() {
     boost::shared_ptr<t_text_ostream> ostream_sink = boost::make_shared<t_text_ostream>();
     ostream_sink->locked_backend()->add_stream(boost::shared_ptr<std::ostream>(&std::clog, boost::null_deleter()));
     // ostream_sink->set_formatter(expr::stream << expr::format_date_time<boost::posix_time::ptime>("TimeStamp", "%Y-%m-%d %H:%M:%S")
-    //                                          << expr::format_named_scope("Scope", logging::keywords::format = "[%f:%l]") <<
+    //                                          << expr::format_named_scope("Scope", keywords::format = "[%f:%l]") <<
     //                                          logging::trivial::severity
     //                                          << expr::smessage);
     ostream_sink->set_formatter(&my_formatter);
@@ -85,14 +85,15 @@ void server_base::init_log() {
     file_sink->locked_backend()->set_file_name_pattern("/home/dkz/ttt/aaa/sample_%Y-%m-%d_%H-%M-%S.txt");
     file_sink->locked_backend()->set_rotation_size(10 << 20);
     file_sink->set_formatter(expr::stream << expr::format_date_time<boost::posix_time::ptime>("TimeStamp", "%Y-%m-%d %H:%M:%S")
-                                          << expr::format_named_scope("Scope", logging::keywords::format = "[%f:%l]") << logging::trivial::severity
+                                          << expr::format_named_scope("Scope", keywords::format = "[%f:%l]") << logging::trivial::severity
                                           << expr::smessage);
     file_sink->locked_backend()->set_file_collector(
         boost::log::sinks::file::make_collector(keywords::target = "aaa", keywords::max_size = 3 * 1024, keywords::max_files = 10));
     file_sink->locked_backend()->scan_for_files(boost::log::sinks::file::scan_method::scan_matching, true);
     file_sink->locked_backend()->auto_flush(true);
     logging::core::get()->add_sink(file_sink);
-    logging::add_common_attributes();
+    logging::core::get()->add_global_attribute(boost::log::aux::default_attribute_names::timestamp(), boost::log::attributes::local_clock());
+    // logging::add_common_attributes();
     // logging::core::get()->set_filter(logging::trivial::severity >= logging::trivial::info);
 }
 
